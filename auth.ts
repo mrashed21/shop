@@ -1,8 +1,7 @@
-
+import axios from "axios";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios from "axios";
-
+import Google from "next-auth/providers/google";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     CredentialsProvider({
@@ -12,10 +11,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         try {
-          const response = await axios.post("http://your-backend-api/auth/login", {
-            email: credentials.email,
-            password: credentials.password,
-          });
+          const response = await axios.post(
+            "http://your-backend-api/auth/login",
+            {
+              email: credentials.email,
+              password: credentials.password,
+            }
+          );
 
           if (response.data.user) {
             return {
@@ -31,6 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       },
     }),
+    Google,
   ],
   callbacks: {
     async jwt({ token, user }) {
